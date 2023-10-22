@@ -27,12 +27,12 @@ impl Commands {
         // Convert the output bytes to a String and print it
         String::from_utf8(output.stdout).expect("Not UTF8")
     }
-
+    #[allow(dead_code)]
     pub fn print(&self) {
         let result = self.call();
         println!("{}", result);
     }
-
+    #[allow(dead_code)]
     pub fn debug(&self) {
         println!("command : {} \nargument : {}", &self.command, &self.arguments);
     }
