@@ -26,7 +26,7 @@ pub fn generate_commit_message(diff: &str) -> String {
     let response_data:serde_json::Value = response.json().expect("Failed to parse response");
     let content = response_data["choices"][0]["message"]["content"].to_string();
 
-    format!("{:?}",escape_special_characters(content))
+    format!("{}",escape_special_characters(content))
 }
 
 
@@ -40,8 +40,7 @@ pub fn get_api_key(variable_name:String) -> String {
 
 fn escape_special_characters(mut input: String) -> String {
     input = input.replace("\"", "\\\"");
-    input = input.replace("\'", "\\\'");
-    input = input.replace("\`", "\\\`");
-
+    input = input.replace("'", "\\'");
+    input = input.replace("`", "\\`");
     input
 }
