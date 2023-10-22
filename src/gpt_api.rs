@@ -16,8 +16,8 @@ pub enum CommitMessageError {
 }
 
 
-pub fn generate_commit_message(diff: &str) -> String {
-    let api_key = get_api_key("GPT_API_KEY".to_string());
+pub fn generate_commit_message(diff: &str) -> Result<String, CommitMessageError> {
+    let api_key = get_api_key("GPT_API_KEY".to_string()).unwrap();
     let endpoint = "https://api.openai.com/v1/chat/completions";
 
     let client = reqwest::blocking::Client::new();
@@ -34,21 +34,17 @@ pub fn generate_commit_message(diff: &str) -> String {
             ],
             "temperature": 0.7
         }))
-        .send()
-        .expect("Failed to send request");
+        .send()?;
 
-    let response_data:serde_json::Value = response.json().expect("Failed to parse response");
+    let response_data:serde_json::Value = response.json()?;
     let content = response_data["choices"][0]["message"]["content"].to_string();
-    format!("{}",escape_special_characters(content))
+    Ok(format!("{}",escape_special_characters(content)))
 }
 
 
-pub fn get_api_key(variable_name:String) -> String {
-    let api_key = match env::var(variable_name) {
-        Ok(key) => key,
-        Err(_) => panic!("API key not found in environment variables!")
-    };
-    api_key
+pub fn get_api_key(variable_name:String) -> Result<String, CommitMessageError> {
+    let api_key = env::var(variable_name).map_err(|_| CommitMessageError::ApiKeyNotFound)?;
+    Ok(api_key)
 }
 
 fn escape_special_characters(mut input: String) -> String {
