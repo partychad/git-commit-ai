@@ -2,6 +2,7 @@
 use std::env;
 
 use thiserror::Error;
+use crate::gpt_api::CommitMessageError::NoChangeMade;
 
 #[derive(Error, Debug)]
 pub enum CommitMessageError {
@@ -20,6 +21,11 @@ pub enum CommitMessageError {
 
 
 pub fn generate_commit_message(diff: &str) -> Result<String, CommitMessageError> {
+
+    if diff.len() == 0 {
+        return Err(NoChangeMade);
+    }
+
     let api_key = get_api_key("GPT_API_KEY".to_string()).unwrap();
     let endpoint = "https://api.openai.com/v1/chat/completions";
 

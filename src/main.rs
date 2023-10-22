@@ -61,7 +61,6 @@ fn main() {
         // println!("{:?}" , command);
 
     }
-    println!("{}", git_diff.call().len());
     match generate_commit_message(&git_diff.call()) {
         Ok(message) => println!("{}", message),
         Err(e) => eprintln!("Error generating commit message: {:?}", e),
