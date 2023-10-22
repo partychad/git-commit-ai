@@ -13,6 +13,9 @@ pub enum CommitMessageError {
 
     #[error("API key not found in environment variables!")]
     ApiKeyNotFound,
+
+    #[error("No change made since the last commit!")]
+    NoChangeMade,
 }
 
 
