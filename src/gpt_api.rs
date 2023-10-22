@@ -21,7 +21,13 @@ pub fn generate_commit_message(diff: &str) -> String {
         .expect("Failed to send request");
 
     let response_data:serde_json::Value = response.json().expect("Failed to parse response");
-    let content = response_data["choices"][0]["message"]["content"].as_str().unwrap();
+    let content = response_data["choices"][0]["message"]["content"].to_string();
 
-    content.trim().to_string()
+    escape_special_characters(content).trim().to_string()
+}
+
+fn escape_special_characters(mut input: String) -> String {
+    input = input.replace("\"", "\\\"");
+    input = input.replace("'", "\\'");
+    input
 }
