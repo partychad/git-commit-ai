@@ -6,7 +6,6 @@ mod commands_module {
     pub struct Commands {
         command: String,
         arguments: String,
-
     }
 
     impl Commands {
@@ -17,7 +16,7 @@ mod commands_module {
             }
         }
 
-        fn call(&self) -> String {
+        pub fn call(&self) -> String {
             let mut cmd = Command::new(&self.command);
 
             for arg in self.arguments.split_whitespace(){
@@ -47,7 +46,9 @@ mod commands_module {
     }
 }
 
+mod gpt_api;
 fn main() {
+    use gpt_api::generate_commit_message;
     use commands_module::Commands;
     let ls = Commands::new("ls".to_string(), vec!["-la"]);
     let pwd = Commands::new("pwd".to_string(), vec![]);
@@ -57,9 +58,10 @@ fn main() {
     let commands = vec![ls,pwd,git_log];
 
     for command in commands.iter() {
-        println!("{:?}" , command);
+        // println!("{:?}" , command);
 
     }
+    println!("{}", generate_commit_message(&git_diff.call()));
 
 
 }
