@@ -11,6 +11,7 @@ fn main() {
         "https://api.openai.com/v1/chat/completions",
         "gpt-3.5-turbo",
         "Based on the following git diff, suggest a formatted and structured but succinct commit message\n{}",
+        "GPT_API_KEY"
     );
 
     let commit_msg = generator.generate_commit_message(&git_diff.call());

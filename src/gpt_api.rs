@@ -22,15 +22,17 @@ pub struct CommitMessageGenerator {
     endpoint: String,
     model: String,
     default_message: String,
+    api_key_env_variable: String
 }
 
 impl CommitMessageGenerator {
 
-    pub fn new(endpoint: &str, model: &str, default_message: &str) -> Self {
+    pub fn new(endpoint: &str, model: &str, default_message: &str, api_key_env_variable: &str) -> Self {
         CommitMessageGenerator {
             endpoint: endpoint.to_string(),
             model: model.to_string(),
             default_message: default_message.to_string(),
+            api_key_env_variable: api_key_env_variable.to_string()
         }
     }
     pub fn generate_commit_message(&self, diff: &str) -> Result<String, CommitMessageError> {
@@ -39,7 +41,7 @@ impl CommitMessageGenerator {
             return Err(CommitMessageError::NoChangeMade);
         }
 
-        let api_key = self.get_api_key("GPT_API_KEY".to_string())?;
+        let api_key = self.get_api_key(self.api_key_env_variable.to_string())?;
         let endpoint = &self.endpoint;
 
         let client = reqwest::blocking::Client::new();
