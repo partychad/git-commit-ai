@@ -15,7 +15,7 @@ pub fn generate_commit_message(diff: &str) -> String {
             "messages": [
             {
                 "role": "user",
-                "content": format!("Based on the following git diff, suggest a formatted and structured but succinct commit message\n{}", diff)
+                "content": format!("Based on the following git diff, suggest a formatted and structured but succinct commit message. Only use \" for quoting\n{}", diff)
             }
             ],
             "temperature": 0.7
@@ -26,7 +26,7 @@ pub fn generate_commit_message(diff: &str) -> String {
     let response_data:serde_json::Value = response.json().expect("Failed to parse response");
     let content = response_data["choices"][0]["message"]["content"].to_string();
 
-    format!("{:?}",content)
+    format!("{:?}",escape_special_characters(content))
 }
 
 
@@ -36,4 +36,12 @@ pub fn get_api_key(variable_name:String) -> String {
         Err(_) => panic!("API key not found in environment variables!")
     };
     api_key
+}
+
+fn escape_special_characters(mut input: String) -> String {
+    input = input.replace("\"", "\\\"");
+    input = input.replace("'", "\\'");
+    input = input.replace("`", "\\`");
+
+    input
 }
