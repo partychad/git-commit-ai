@@ -35,7 +35,7 @@ impl CommitMessageGenerator {
             api_key_env_variable: api_key_env_variable.to_string()
         }
     }
-    pub fn generate_commit_message(&self, diff: &str) -> Result<String, CommitMessageError> {
+    pub fn generate_commit_message(&self, diff: &str, untracked_files:&str) -> Result<String, CommitMessageError> {
 
         if diff.len() == 0 {
             return Err(CommitMessageError::NoChangeMade);
@@ -53,7 +53,7 @@ impl CommitMessageGenerator {
             "messages": [
             {
                 "role": "user",
-                "content": format!("{}\n{}" ,self.default_message, diff)
+                "content": format!("{}\n diff: {} \nuntracked files: {}" ,self.default_message, diff, untracked_files)
             }
             ],
             "temperature": 0.7
