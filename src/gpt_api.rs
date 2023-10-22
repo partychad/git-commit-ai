@@ -26,7 +26,7 @@ pub fn generate_commit_message(diff: &str) -> Result<String, CommitMessageError>
         return Err(NoChangeMade);
     }
 
-    let api_key = get_api_key("GPT_API_KEY".to_string()).unwrap();
+    let api_key = get_api_key("GPT_API_KEY".to_string())?;
     let endpoint = "https://api.openai.com/v1/chat/completions";
 
     let client = reqwest::blocking::Client::new();
