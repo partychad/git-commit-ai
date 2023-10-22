@@ -26,8 +26,3 @@ pub fn generate_commit_message(diff: &str) -> String {
     format!("{:?}",content)
 }
 
-fn escape_special_characters(mut input: String) -> String {
-    input = input.replace("\"", "\\\"");
-    input = input.replace("'", "\\'");
-    input
-}
