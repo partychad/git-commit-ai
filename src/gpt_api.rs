@@ -25,7 +25,7 @@ pub fn generate_commit_message(diff: &str) -> String {
 
     let response_data:serde_json::Value = response.json().expect("Failed to parse response");
     let content = response_data["choices"][0]["message"]["content"].to_string();
-
+    println!("{}", content);
     format!("{}",escape_special_characters(content))
 }
 
