@@ -50,17 +50,8 @@ mod gpt_api;
 fn main() {
     use gpt_api::generate_commit_message;
     use commands_module::Commands;
-    let ls = Commands::new("ls".to_string(), vec!["-la"]);
-    let pwd = Commands::new("pwd".to_string(), vec![]);
-    let git_log = Commands::new("git".to_string(), vec!["log", "-3", "--oneline"]);
     let git_diff = Commands::new("git".to_string(), vec!["diff"]);
 
-    let commands = vec![ls,pwd,git_log];
-
-    for command in commands.iter() {
-        // println!("{:?}" , command);
-
-    }
     match generate_commit_message(&git_diff.call()) {
         Ok(message) => println!("{}", message),
         Err(e) => eprintln!("Error generating commit message: {:?}", e),
