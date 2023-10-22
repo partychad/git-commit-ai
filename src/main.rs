@@ -6,7 +6,7 @@ fn main() {
     use gpt_api::CommitMessageGenerator;
     use commands::Commands;
     let git_diff = Commands::new("git".to_string(), vec!["diff"]);
-    let git_status = Commands::new("git".to_string(), vec!["status", "--short"]);
+    let git_status = Commands::new("git".to_string(), vec!["status"]);
 
     let generator = CommitMessageGenerator::new(
         "https://api.openai.com/v1/chat/completions",
