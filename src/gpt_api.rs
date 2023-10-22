@@ -1,6 +1,20 @@
 
 use std::env;
 
+use thiserror::Error;
+
+#[derive(Error, Debug)]
+pub enum CommitMessageError {
+    #[error("Failed to send request")]
+    RequestError(#[from] reqwest::Error),
+
+    #[error("Failed to parse response")]
+    ParseError(#[from] serde_json::Error),
+
+    #[error("API key not found in environment variables!")]
+    ApiKeyNotFound,
+}
+
 
 pub fn generate_commit_message(diff: &str) -> String {
     let api_key = get_api_key("GPT_API_KEY".to_string());
@@ -15,7 +29,7 @@ pub fn generate_commit_message(diff: &str) -> String {
             "messages": [
             {
                 "role": "user",
-                "content": format!("Based on the following git diff, suggest a formatted and structured but succinct commit message. Only use \" for quoting\n{}", diff)
+                "content": format!("Based on the following git diff, suggest a formatted and structured but succinct commit message\n{}", diff)
             }
             ],
             "temperature": 0.7
@@ -25,7 +39,6 @@ pub fn generate_commit_message(diff: &str) -> String {
 
     let response_data:serde_json::Value = response.json().expect("Failed to parse response");
     let content = response_data["choices"][0]["message"]["content"].to_string();
-    println!("{}", content);
     format!("{}",escape_special_characters(content))
 }
 
