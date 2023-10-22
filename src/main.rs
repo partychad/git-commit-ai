@@ -48,13 +48,20 @@ mod commands_module {
 
 mod gpt_api;
 fn main() {
-    use gpt_api::generate_commit_message;
+    use gpt_api::CommitMessageGenerator;
     use commands_module::Commands;
     let git_diff = Commands::new("git".to_string(), vec!["diff"]);
 
-    match generate_commit_message(&git_diff.call()) {
-        Ok(message) => println!("{}", message),
-        Err(e) => eprintln!("Error generating commit message: {:?}", e),
+    let generator = CommitMessageGenerator::new(
+        "https://api.openai.com/v1/chat/completions",
+        "gpt-3.5-turbo",
+        "Based on the following git diff, suggest a formatted and structured but succinct commit message\n{}",
+    );
+
+    let commit_msg = generator.generate_commit_message(&git_diff.call());
+    match commit_msg {
+        Ok(msg) => println!("{}", msg),
+        Err(err) => eprintln!("Error encountered: {:?}", err),
     }
 
 

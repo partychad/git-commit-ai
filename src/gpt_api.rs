@@ -2,7 +2,6 @@
 use std::env;
 
 use thiserror::Error;
-use crate::gpt_api::CommitMessageError::NoChangeMade;
 
 #[derive(Error, Debug)]
 pub enum CommitMessageError {
@@ -19,46 +18,61 @@ pub enum CommitMessageError {
     NoChangeMade,
 }
 
+pub struct CommitMessageGenerator {
+    endpoint: String,
+    model: String,
+    default_message: String,
+}
 
-pub fn generate_commit_message(diff: &str) -> Result<String, CommitMessageError> {
+impl CommitMessageGenerator {
 
-    if diff.len() == 0 {
-        return Err(NoChangeMade);
+    pub fn new(endpoint: &str, model: &str, default_message: &str) -> Self {
+        CommitMessageGenerator {
+            endpoint: endpoint.to_string(),
+            model: model.to_string(),
+            default_message: default_message.to_string(),
+        }
     }
+    pub fn generate_commit_message(&self, diff: &str) -> Result<String, CommitMessageError> {
 
-    let api_key = get_api_key("GPT_API_KEY".to_string())?;
-    let endpoint = "https://api.openai.com/v1/chat/completions";
+        if diff.len() == 0 {
+            return Err(CommitMessageError::NoChangeMade);
+        }
 
-    let client = reqwest::blocking::Client::new();
+        let api_key = self.get_api_key("GPT_API_KEY".to_string())?;
+        let endpoint = &self.endpoint;
 
-    let response = client.post(endpoint)
-        .header("Authorization", format!("Bearer {}", api_key))
-        .json(&serde_json::json!({
-            "model": "gpt-3.5-turbo",
+        let client = reqwest::blocking::Client::new();
+
+        let response = client.post(endpoint)
+            .header("Authorization", format!("Bearer {}", api_key))
+            .json(&serde_json::json!({
+            "model": self.model,
             "messages": [
             {
                 "role": "user",
-                "content": format!("Based on the following git diff, suggest a formatted and structured but succinct commit message\n{}", diff)
+                "content": format!("{}\n{}" ,self.default_message, diff)
             }
             ],
             "temperature": 0.7
         }))
-        .send()?;
+            .send()?;
 
-    let response_data:serde_json::Value = response.json()?;
-    let content = response_data["choices"][0]["message"]["content"].to_string();
-    Ok(format!("{}",escape_special_characters(content)))
-}
+        let response_data:serde_json::Value = response.json()?;
+        let content = response_data["choices"][0]["message"]["content"].to_string();
+        Ok(format!("{}",self.escape_special_characters(content)))
+    }
 
 
-pub fn get_api_key(variable_name:String) -> Result<String, CommitMessageError> {
-    let api_key = env::var(variable_name).map_err(|_| CommitMessageError::ApiKeyNotFound)?;
-    Ok(api_key)
-}
+    fn get_api_key(&self, variable_name:String) -> Result<String, CommitMessageError> {
+        let api_key = env::var(variable_name).map_err(|_| CommitMessageError::ApiKeyNotFound)?;
+        Ok(api_key)
+    }
 
-fn escape_special_characters(mut input: String) -> String {
-    input = input.replace("\"", "\\\"");
-    input = input.replace("'", "\\'");
-    input = input.replace("`", "\\`");
-    input
+    fn escape_special_characters(&self, mut input: String) -> String {
+        input = input.replace("\"", "\\\"");
+        input = input.replace("'", "\\'");
+        input = input.replace("`", "\\`");
+        input
+    }
 }
