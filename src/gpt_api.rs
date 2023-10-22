@@ -1,7 +1,10 @@
 
+use std::env;
+
+
 pub fn generate_commit_message(diff: &str) -> String {
-    let api_key = "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"; // replace with your key
-    let endpoint = "https://api.openai.com/v1/chat/completions"; // this might differ based on your OpenAI version and specifics
+    let api_key = get_api_key("GPT_API_KEY".to_string());
+    let endpoint = "https://api.openai.com/v1/chat/completions";
 
     let client = reqwest::blocking::Client::new();
 
@@ -26,3 +29,11 @@ pub fn generate_commit_message(diff: &str) -> String {
     format!("{:?}",content)
 }
 
+
+pub fn get_api_key(variable_name:String) -> String {
+    let api_key = match env::var(variable_name) {
+        Ok(key) => key,
+        Err(_) => panic!("API key not found in environment variables!")
+    };
+    api_key
+}
