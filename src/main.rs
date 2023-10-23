@@ -30,7 +30,7 @@ fn main() {
         },
     };
 
-    let git_commit = Commands::new("git".to_string(), vec!["commit".to_string(), "-m".to_string(), format!("\"{}\"", final_msg)]);
+    let git_commit = Commands::new("git".to_string(), vec!["commit".to_string(), "-m".to_string(), final_msg]);
 
     git_add.call();
     git_commit.call();
