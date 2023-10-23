@@ -5,10 +5,10 @@ mod commands;
 fn main() {
     use gpt_api::CommitMessageGenerator;
     use commands::Commands;
-    let git_diff = Commands::new("git".to_string(), vec!["diff"]);
-    let git_status = Commands::new("git".to_string(), vec!["status"]);
-    let git_add = Commands::new("git".to_string(), vec!["add", "."]);
-    let git_push = Commands::new("git".to_string(), vec!["add", "push", "--force-with-lease"]);
+    let git_diff = Commands::new("git".to_string(), vec!["diff".to_string()]);
+    let git_status = Commands::new("git".to_string(), vec!["status".to_string()]);
+    let git_add = Commands::new("git".to_string(), vec!["add".to_string(), ".".to_string()]);
+    let git_push = Commands::new("git".to_string(), vec!["add".to_string(), "push".to_string(), "--force-with-lease".to_string()]);
 
 
     let generator = CommitMessageGenerator::new(
@@ -30,11 +30,10 @@ fn main() {
         },
     };
 
-    let git_commit = Commands::new("git".to_string(), vec!["commit", "-m", &format!("\"{}\"", final_msg)]);
+    let git_commit = Commands::new("git".to_string(), vec!["commit".to_string(), "-m".to_string(), format!("\"{}\"", final_msg)]);
 
     git_add.call();
     git_commit.call();
-    git_commit.debug();
 
 
 }

@@ -4,26 +4,27 @@ use std::process::Command;
 
 pub struct Commands {
     command: String,
-    arguments: String,
+    arguments: Vec<String>,
 }
 
 impl Commands {
-    pub fn new(command_name: String, arguments: Vec<&str>) -> Commands {
+    pub fn new(command_name: String, arguments: Vec<String>) -> Commands {
         Commands {
             command: command_name,
-            arguments: arguments.join(" "),
+            arguments: arguments,
         }
     }
 
     pub fn call(&self) -> String {
         let mut cmd = Command::new(&self.command);
 
-        for arg in self.arguments.split_whitespace(){
+        for arg in &self.arguments{
             cmd.arg(arg);
         }
+        println!("{:?}", cmd);
+
         let output = cmd.output()
             .expect("Failed to execute command");
-
         // Convert the output bytes to a String and print it
         String::from_utf8(output.stdout).expect("Not UTF8")
     }
@@ -34,12 +35,12 @@ impl Commands {
     }
     #[allow(dead_code)]
     pub fn debug(&self) {
-        println!("command : {} \nargument : {}", &self.command, &self.arguments);
+        println!("command : {} \nargument : {:?}", &self.command, &self.arguments);
     }
 }
 
 impl fmt::Debug for Commands {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        write!(f, "Output of call \"{} {}\" is:\n{}", &self.command , &self.arguments.as_str(), self.call())
+        write!(f, "Output of call \"{} {:?}\" is:\n{}", &self.command , &self.arguments, self.call())
     }
 }
