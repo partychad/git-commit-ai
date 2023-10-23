@@ -72,7 +72,6 @@ impl CommitMessageGenerator {
     }
 
     fn escape_special_characters(&self, mut input: String) -> String {
-        input = input.replace("\"", "\\\"");
         input = input.replace("'", "\\'");
         input = input.replace("`", "\\`");
         input
