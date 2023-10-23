@@ -34,6 +34,7 @@ fn main() {
 
     git_add.call();
     git_commit.call();
+    git_push.call();
 
 
 }
