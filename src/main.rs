@@ -8,7 +8,7 @@ fn main() {
     let git_diff = Commands::new("git".to_string(), vec!["diff".to_string()]);
     let git_status = Commands::new("git".to_string(), vec!["status".to_string()]);
     let git_add = Commands::new("git".to_string(), vec!["add".to_string(), ".".to_string()]);
-    let git_push = Commands::new("git".to_string(), vec!["add".to_string(), "push".to_string(), "--force-with-lease".to_string()]);
+    let git_push = Commands::new("git".to_string(), vec![ "push".to_string(), "--force-with-lease".to_string()]);
 
 
     let generator = CommitMessageGenerator::new(
