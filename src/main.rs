@@ -7,6 +7,9 @@ fn main() {
     use commands::Commands;
     let git_diff = Commands::new("git".to_string(), vec!["diff"]);
     let git_status = Commands::new("git".to_string(), vec!["status"]);
+    let git_add = Commands::new("git".to_string(), vec!["add", "."]);
+    let git_push = Commands::new("git".to_string(), vec!["add", "push", "--force-with-lease"]);
+
 
     let generator = CommitMessageGenerator::new(
         "https://api.openai.com/v1/chat/completions",
@@ -16,10 +19,23 @@ fn main() {
     );
 
     let commit_msg = generator.generate_commit_message(&git_diff.call(), &git_status.call());
-    match commit_msg {
-        Ok(msg) => println!("{}", msg),
-        Err(err) => eprintln!("Error encountered: {:?}", err),
-    }
+    let final_msg = match commit_msg {
+        Ok(msg) => {
+            println!("{}", msg);
+            msg
+        },
+        Err(err) => {
+            eprintln!("Error encountered: {}", err);
+            return
+        },
+    };
+
+    let git_commit = Commands::new("git".to_string(), vec!["commit", "-m", &format!("\"{}\"", final_msg)]);
+
+    git_add.call();
+    git_commit.call();
+    git_commit.debug();
 
 
 }
+
