@@ -65,7 +65,13 @@ fn display_commit_message() -> String {
 }
 
 fn display_config() {
-    // Your code to display the configuration parameters
+    let generator = CommitMessageGenerator::new(
+        "https://api.openai.com/v1/chat/completions",
+        "gpt-4",
+        "Based on the following git diff and git status output, suggest a formatted and structured but succinct commit message\n",
+        "GPT_API_KEY"
+    );
+    generator.display_parameters();
 }
 
 fn commit() {

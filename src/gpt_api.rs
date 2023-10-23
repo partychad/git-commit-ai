@@ -76,4 +76,9 @@ impl CommitMessageGenerator {
         input = input.replace("`", "\\`");
         input
     }
+    pub fn display_parameters(&self) {
+        println!("Endpoint: {}", self.endpoint);
+        println!("Model: {}", self.model);
+        println!("Default Message: {}", self.default_message);
+    }
 }
