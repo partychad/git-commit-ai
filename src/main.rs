@@ -7,7 +7,7 @@ use commands::Commands;
 fn main() {
     let matches = App::new("Git GPT Helper")
         .version("1.0")
-        .author("Your Name <partychad@protonmail.com>")
+        .author("<partychad@protonmail.com>")
         .about("Automates git commit messages using GPT suggestions.")
         .subcommand(SubCommand::with_name("s")
             .about("Displays git status"))
