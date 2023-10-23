@@ -21,7 +21,6 @@ impl Commands {
         for arg in &self.arguments{
             cmd.arg(arg);
         }
-        println!("{:?}", cmd);
 
         let output = cmd.output()
             .expect("Failed to execute command");
