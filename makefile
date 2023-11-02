@@ -1,5 +1,5 @@
 # Name of the binary
-BINARY_NAME=token_balance_watcher
+BINARY_NAME=ai-git
 
 # Installation directory
 INSTALL_DIR=/usr/local/bin

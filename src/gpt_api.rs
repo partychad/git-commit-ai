@@ -1,4 +1,3 @@
-
 use std::env;
 
 use thiserror::Error;
@@ -22,21 +21,28 @@ pub struct CommitMessageGenerator {
     endpoint: String,
     model: String,
     default_message: String,
-    api_key_env_variable: String
+    api_key_env_variable: String,
 }
 
 impl CommitMessageGenerator {
-
-    pub fn new(endpoint: &str, model: &str, default_message: &str, api_key_env_variable: &str) -> Self {
+    pub fn new(
+        endpoint: &str,
+        model: &str,
+        default_message: &str,
+        api_key_env_variable: &str,
+    ) -> Self {
         CommitMessageGenerator {
             endpoint: endpoint.to_string(),
             model: model.to_string(),
             default_message: default_message.to_string(),
-            api_key_env_variable: api_key_env_variable.to_string()
+            api_key_env_variable: api_key_env_variable.to_string(),
         }
     }
-    pub fn generate_commit_message(&self, diff: &str, untracked_files:&str) -> Result<String, CommitMessageError> {
-
+    pub fn generate_commit_message(
+        &self,
+        diff: &str,
+        untracked_files: &str,
+    ) -> Result<String, CommitMessageError> {
         if diff.len() == 0 {
             return Err(CommitMessageError::NoChangeMade);
         }
@@ -60,13 +66,12 @@ impl CommitMessageGenerator {
         }))
             .send()?;
 
-        let response_data:serde_json::Value = response.json()?;
+        let response_data: serde_json::Value = response.json()?;
         let content = response_data["choices"][0]["message"]["content"].to_string();
-        Ok(format!("{}",self.escape_special_characters(content)))
+        Ok(format!("{}", self.escape_special_characters(content)))
     }
 
-
-    fn get_api_key(&self, variable_name:String) -> Result<String, CommitMessageError> {
+    fn get_api_key(&self, variable_name: String) -> Result<String, CommitMessageError> {
         let api_key = env::var(variable_name).map_err(|_| CommitMessageError::ApiKeyNotFound)?;
         Ok(api_key)
     }
