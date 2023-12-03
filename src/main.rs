@@ -3,6 +3,13 @@ mod gpt_api;
 use clap::{App, SubCommand};
 use commands::Commands;
 use gpt_api::CommitMessageGenerator;
+
+
+const API_URL: &str = "https://api.openai.com/v1/chat/completions";
+const API_KEY: &str = "GPT_API_KEY";
+const AI_MODEL: &str = "gpt-4";
+const PROMPT: &str = "Based on the following git diff and git status, write a short commit message. Only include the description without any titles or new lines";
+
 fn main() {
     let matches = App::new("Git GPT Helper")
         .version("1.0")
@@ -39,10 +46,10 @@ fn display_status() {
 
 fn display_commit_message() -> String {
     let generator = CommitMessageGenerator::new(
-    "https://api.openai.com/v1/chat/completions",
-    "gpt-4",
-    "Based on the following git diff and git status, write a short commit message. Only include the description without any titles or new lines",
-    "GPT_API_KEY"
+    API_URL,
+    AI_MODEL,
+    PROMPT,
+    API_KEY
     );
     let git_diff = Commands::new("git".to_string(), vec!["diff".to_string()]);
     let git_status = Commands::new("git".to_string(), vec!["status".to_string()]);
@@ -62,10 +69,10 @@ fn display_commit_message() -> String {
 
 fn display_config() {
     let generator = CommitMessageGenerator::new(
-        "https://api.openai.com/v1/chat/completions",
-        "gpt-4",
-        "Based on the following git diff and git status, describe the changes. Only include the description without any titles or new lines",
-        "GPT_API_KEY"
+        API_URL,
+        AI_MODEL,
+        PROMPT,
+        API_KEY
     );
     generator.display_parameters();
 }
