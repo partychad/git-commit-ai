@@ -41,7 +41,7 @@ fn display_commit_message() -> String {
     let generator = CommitMessageGenerator::new(
     "https://api.openai.com/v1/chat/completions",
     "gpt-4",
-    "Based on the following git diff and git status output, suggest a formatted and structured but succinct commit message\n",
+    "Based on the following git diff and git status, write a short commit message. Only include the description without any titles or new lines",
     "GPT_API_KEY"
     );
     let git_diff = Commands::new("git".to_string(), vec!["diff".to_string()]);
@@ -64,7 +64,7 @@ fn display_config() {
     let generator = CommitMessageGenerator::new(
         "https://api.openai.com/v1/chat/completions",
         "gpt-4",
-        "Based on the following git diff and git status output, suggest a formatted and structured but succinct commit message\n",
+        "Based on the following git diff and git status, describe the changes. Only include the description without any titles or new lines",
         "GPT_API_KEY"
     );
     generator.display_parameters();

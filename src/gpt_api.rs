@@ -68,6 +68,7 @@ impl CommitMessageGenerator {
 
         let response_data: serde_json::Value = response.json()?;
         let content = response_data["choices"][0]["message"]["content"].to_string();
+        println!("Response: {}", content);
         Ok(format!("{}", self.escape_special_characters(content)))
     }
 
@@ -77,10 +78,11 @@ impl CommitMessageGenerator {
     }
 
     fn escape_special_characters(&self, mut input: String) -> String {
-        input = input.replace("'", "\\'");
-        input = input.replace("`", "\\`");
+        input = input.replace("'", "");
+        input = input.replace("\"", "");
         input
     }
+
     pub fn display_parameters(&self) {
         println!("Endpoint: {}", self.endpoint);
         println!("Model: {}", self.model);
