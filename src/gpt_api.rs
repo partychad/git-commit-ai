@@ -68,7 +68,6 @@ impl CommitMessageGenerator {
 
         let response_data: serde_json::Value = response.json()?;
         let content = response_data["choices"][0]["message"]["content"].to_string();
-        println!("Response: {}", content);
         Ok(format!("{}", self.escape_special_characters(content)))
     }
 
