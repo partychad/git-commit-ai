@@ -60,7 +60,7 @@ fn display_commit_message() -> String {
             msg
         }
         Err(err) => {
-            eprintln!("{} {}","Error encountered:".green(), err);
+            eprintln!("{} {}","Error encountered:".red(), err);
             return String::new();
         }
     };
