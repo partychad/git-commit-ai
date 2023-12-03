@@ -11,7 +11,7 @@ impl Commands {
     pub fn new(command_name: String, arguments: Vec<String>) -> Commands {
         Commands {
             command: command_name,
-            arguments: arguments,
+            arguments,
         }
     }
 

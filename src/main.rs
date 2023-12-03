@@ -31,7 +31,6 @@ fn main() {
         _ => unreachable!(), // If someone added a subcommand but didn't add a case here
     }
 }
-
 fn display_status() {
     let git_status = Commands::new("git".to_string(), vec!["status".to_string()]);
     let status = git_status.call();
@@ -50,7 +49,6 @@ fn display_commit_message() -> String {
     let commit_msg = generator.generate_commit_message(&git_diff.call(), &git_status.call());
     let final_msg = match commit_msg {
         Ok(msg) => {
-            println!("{}", msg);
             msg
         }
         Err(err) => {
@@ -58,7 +56,7 @@ fn display_commit_message() -> String {
             return String::new();
         }
     };
-    println!("Status {}", final_msg);
+    println!("Commit Message : {}", final_msg);
     final_msg
 }
 

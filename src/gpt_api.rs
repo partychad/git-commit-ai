@@ -43,7 +43,7 @@ impl CommitMessageGenerator {
         diff: &str,
         untracked_files: &str,
     ) -> Result<String, CommitMessageError> {
-        if diff.len() == 0 {
+        if diff.is_empty()  {
             return Err(CommitMessageError::NoChangeMade);
         }
 
