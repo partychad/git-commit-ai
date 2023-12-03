@@ -1,6 +1,7 @@
 use std::env;
 
 use thiserror::Error;
+use colored::Colorize;
 
 #[derive(Error, Debug)]
 pub enum CommitMessageError {
@@ -83,8 +84,8 @@ impl CommitMessageGenerator {
     }
 
     pub fn display_parameters(&self) {
-        println!("Endpoint: {}", self.endpoint);
-        println!("Model: {}", self.model);
-        println!("Default Message: {} \n", self.default_message);
+        println!("{} {}","Endpoint:".green(), self.endpoint);
+        println!("{} {}","Model:".green(), self.model);
+        println!("{} {} \n","Default Message:".green(), self.default_message);
     }
 }

@@ -3,6 +3,7 @@ mod gpt_api;
 use clap::{App, SubCommand};
 use commands::Commands;
 use gpt_api::CommitMessageGenerator;
+use colored::Colorize;
 
 
 const API_URL: &str = "https://api.openai.com/v1/chat/completions";
@@ -63,7 +64,7 @@ fn display_commit_message() -> String {
             return String::new();
         }
     };
-    println!("Commit Message : {}", final_msg);
+    println!("{} {}\n","Commit Message:".green(), final_msg);
     final_msg
 }
 
