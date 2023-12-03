@@ -85,6 +85,6 @@ impl CommitMessageGenerator {
     pub fn display_parameters(&self) {
         println!("Endpoint: {}", self.endpoint);
         println!("Model: {}", self.model);
-        println!("Default Message: {}", self.default_message);
+        println!("Default Message: {} \n", self.default_message);
     }
 }
