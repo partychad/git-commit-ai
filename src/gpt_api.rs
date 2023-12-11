@@ -44,11 +44,12 @@ impl CommitMessageGenerator {
         diff: &str,
         untracked_files: &str,
     ) -> Result<String, CommitMessageError> {
+        let api_key = self.get_api_key(self.api_key_env_variable.to_string())?;
+        
         if diff.is_empty() && untracked_files.is_empty() {
             return Err(CommitMessageError::NoChangeMade);
         }
 
-        let api_key = self.get_api_key(self.api_key_env_variable.to_string())?;
         let endpoint = &self.endpoint;
 
         let client = reqwest::blocking::Client::new();
