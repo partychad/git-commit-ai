@@ -42,7 +42,7 @@ fn main() {
 fn display_status() {
     let git_status = Commands::new("git".to_string(), vec!["status".to_string()]);
     let status = git_status.call();
-    println!("Status {}", status);
+    print_commit_metadata( parse_git_status(&status), "");
 }
 
 fn display_commit_message() -> String {
@@ -155,8 +155,10 @@ fn print_commit_metadata(data:(String, Vec<String>, Vec<String>), commit_msg: &s
         for file in modified {
             println!("\t{}", file);
         }
-    } 
-    println!("{} {}\n","Commit Message:".green(), commit_msg);
+    }
+    if !commit_msg.is_empty() {
+        println!("{} {}\n","Commit Message:".green(), commit_msg);
+    }
 
 }
 
