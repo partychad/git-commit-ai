@@ -64,11 +64,8 @@ fn display_commit_message() -> String {
             return String::new();
         }
     };
-    let (branch, untracked, modified) = parse_git_status(&git_status.call());
-    println!("Branch: {}", branch);
-    println!("Untracked Files: {:?}", untracked);
-    println!("Modified Files: {:?}", modified);
-    println!("{} {}\n","Commit Message:".green(), final_msg);
+    print_commit_metadata( parse_git_status(&git_status.call()), &final_msg);
+
     final_msg
 }
 
@@ -143,3 +140,21 @@ fn parse_git_status(output: &str) -> (String, Vec<String>, Vec<String>) {
     (branch_name, untracked_files, modified_files)
 }
 
+fn print_commit_metadata(data:(String, Vec<String>, Vec<String>), commit_msg: &str) {
+    let (branch, untracked, modified) = data;
+    println!("{} {}","Branch:".green(), branch);
+    if !untracked.is_empty() {
+        println!("{}","Untracked Files:".green());
+        for file in untracked {
+            println!("\t{}", file);
+        }
+    }
+    if !modified.is_empty() {
+        println!("{}","Modified Files:".green());
+        for file in modified {
+            println!("\t{}", file);
+        }
+    } 
+    println!("{} {}\n","Commit Message:".green(), commit_msg);
+
+}
