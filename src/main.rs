@@ -64,6 +64,10 @@ fn display_commit_message() -> String {
             return String::new();
         }
     };
+    let (branch, untracked, modified) = parse_git_status(&git_status.call());
+    println!("Branch: {}", branch);
+    println!("Untracked Files: {:?}", untracked);
+    println!("Modified Files: {:?}", modified);
     println!("{} {}\n","Commit Message:".green(), final_msg);
     final_msg
 }
@@ -101,3 +105,41 @@ fn push() {
     );
     git_push.call();
 }
+
+fn parse_git_status(output: &str) -> (String, Vec<String>, Vec<String>) {
+    let mut branch_name = String::new();
+    let mut untracked_files = Vec::new();
+    let mut modified_files = Vec::new();
+
+    let lines: Vec<&str> = output.lines().collect();
+    let mut skip_line = 0;
+    let mut section = "";
+
+    for line in lines {
+        if skip_line > 0 {
+            skip_line -= 1;
+            continue;
+        }
+        if line.starts_with("On branch") {
+            branch_name = line.replace("On branch ", "");
+        } else if line.starts_with("Changes not staged for commit:") {
+            skip_line = 2;
+            section = "modified";
+        } else if line.starts_with("Untracked files:") {
+            skip_line = 1;
+            section = "untracked";
+        } else if !section.is_empty(){
+            if line.is_empty() {
+                section = "";
+            }
+            match section {
+                "modified" => modified_files.push(line.trim().replace("modified:   ", "")),
+                "untracked" => untracked_files.push(line.trim().to_string()),
+                _ => {}
+            }
+        }
+    }
+
+    (branch_name, untracked_files, modified_files)
+}
+
