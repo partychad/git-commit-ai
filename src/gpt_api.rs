@@ -46,7 +46,7 @@ impl CommitMessageGenerator {
     ) -> Result<String, CommitMessageError> {
         let api_key = self.get_api_key(self.api_key_env_variable.to_string())?;
         
-        if diff.is_empty() && untracked_files.is_empty() {
+        if diff.is_empty() && untracked_files.contains("nothing to commit") {
             return Err(CommitMessageError::NoChangeMade);
         }
 
