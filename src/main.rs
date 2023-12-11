@@ -4,7 +4,7 @@ use clap::{App, SubCommand};
 use commands::Commands;
 use gpt_api::CommitMessageGenerator;
 use colored::Colorize;
-
+use std::io::{self, Read};
 
 const API_URL: &str = "https://api.openai.com/v1/chat/completions";
 const API_KEY: &str = "GPT_API_KEY";
@@ -86,6 +86,7 @@ fn commit() {
             "git".to_string(),
             vec!["commit".to_string(), "-m".to_string(), commit_msg],
         );
+        press_enter_to_continue();
         let git_add = Commands::new("git".to_string(), vec!["add".to_string(), ".".to_string()]);
         git_add.call();
         git_commit.call();
@@ -157,4 +158,15 @@ fn print_commit_metadata(data:(String, Vec<String>, Vec<String>), commit_msg: &s
     } 
     println!("{} {}\n","Commit Message:".green(), commit_msg);
 
+}
+
+fn press_enter_to_continue() {
+    println!("Press Enter To Commit and Push...");
+
+    // Lock stdin so we can read from it
+    let stdin = io::stdin();
+    let mut iterator = stdin.lock().bytes();
+
+    // Wait for a single byte to be pressed and then exit
+    iterator.next();
 }
