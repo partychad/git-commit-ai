@@ -1,5 +1,6 @@
 mod commands;
 mod gpt_api;
+mod cursor;
 use clap::{App, SubCommand};
 use commands::Commands;
 use gpt_api::CommitMessageGenerator;
