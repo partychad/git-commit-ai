@@ -43,7 +43,13 @@ fn main() {
 fn display_status() {
     let git_status = Commands::new("git".to_string(), vec!["status".to_string()]);
     let status = git_status.call();
-    print_commit_metadata( parse_git_status(&status), "");
+    let (_, untracked, modified) = parse_git_status(&status);
+    let mut combined = Vec::new();
+    println!("{}","Git Status:".green());
+    combined.extend(untracked);
+    combined.extend(modified);
+    combined.push("Done".to_string());
+    cursor::navigate_strings(&combined);
 }
 
 fn display_commit_message() -> String {

@@ -4,10 +4,10 @@ use crossterm::{
     terminal::{self, Clear, ClearType},
     ExecutableCommand,
 };
-use std::io::{self, Write};
+use std::io;
 use colored::Colorize;
 
-fn navigate_strings(strings: &[String]) -> Option<Vec<usize>>{
+pub fn navigate_strings(strings: &[String]) -> Option<Vec<usize>>{
     let mut stdout = io::stdout();
     let mut current_index: usize = 0;
     let mut selected_indexes:Vec<usize> = Vec::new();
@@ -16,11 +16,17 @@ fn navigate_strings(strings: &[String]) -> Option<Vec<usize>>{
 
     loop {
         stdout.execute(Clear(ClearType::All)).unwrap();
+
+        stdout.execute(MoveTo(0, 0)).unwrap();
+        println!("Select files which you wish to be included in the commit message.");
+        stdout.execute(MoveTo(0, 1)).unwrap();
+        println!("Select Done when you are finished and escape to exit.\n");
         for (i, string) in strings.iter().enumerate() {
             let is_selected = selected_indexes.contains(&i);
             let is_current = i == current_index;
             let done_position = strings.len() - 1;
-            stdout.execute(MoveTo(0, i as u16)).unwrap();
+            
+            stdout.execute(MoveTo(0, (i+3) as u16)).unwrap();
             if is_current && is_selected {
                 println!("-> [{}] {}", "✓".green(), string);
             } else if i == done_position && is_current {
