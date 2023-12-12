@@ -20,7 +20,7 @@ pub fn navigate_strings(strings: &[String]) -> Option<Vec<usize>>{
         stdout.execute(MoveTo(0, 0)).unwrap();
         println!("Select files which you wish to be included in the commit message.");
         stdout.execute(MoveTo(0, 1)).unwrap();
-        println!("Select Done when you are finished and escape to exit.\n");
+        println!("Select {} when you are finished or {} to exit.\n", "Done".green(), "Escape".green());
         for (i, string) in strings.iter().enumerate() {
             let is_selected = selected_indexes.contains(&i);
             let is_current = i == current_index;
