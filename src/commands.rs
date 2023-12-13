@@ -26,11 +26,9 @@ impl Commands {
         // Convert the output bytes to a String and print it
         if output.status.success() {
             let stdout: String = String::from_utf8(output.stdout).unwrap();
-            println!("Git push output: {}", stdout);
             stdout
         } else {
             let stderr = String::from_utf8(output.stderr).unwrap();
-            eprintln!("Git push error: {}", stderr);
             stderr
         }
     }
