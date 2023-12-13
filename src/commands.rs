@@ -24,7 +24,15 @@ impl Commands {
 
         let output = cmd.output().expect("Failed to execute command");
         // Convert the output bytes to a String and print it
-        String::from_utf8(output.stdout).expect("Not UTF8")
+        if output.status.success() {
+            let stdout: String = String::from_utf8(output.stdout).unwrap();
+            println!("Git push output: {}", stdout);
+            stdout
+        } else {
+            let stderr = String::from_utf8(output.stderr).unwrap();
+            eprintln!("Git push error: {}", stderr);
+            stderr
+        }
     }
 
     #[allow(dead_code)]
