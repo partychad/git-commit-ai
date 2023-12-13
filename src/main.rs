@@ -52,11 +52,10 @@ fn selected_commit() {
     let selection = cursor::navigate_strings(&combined);
     match selection {
         Some(files) => {
-            println!("{:?}", files);
             push(Some(files.clone()),Some(files))
         }
         None => {
-            println!("No files selected. Terminating...");
+            println!("No files selected. Terminating...\n");
         }
     }
 }
