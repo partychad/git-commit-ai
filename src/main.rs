@@ -55,7 +55,9 @@ fn selected_commit() {
             println!("{:?}", files);
             push(Some(files.clone()),Some(files))
         }
-        None => {}
+        None => {
+            println!("No files selected. Terminating...");
+        }
     }
 }
 

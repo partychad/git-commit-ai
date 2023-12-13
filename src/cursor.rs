@@ -7,7 +7,7 @@ use crossterm::{
 use std::io;
 use colored::Colorize;
 
-pub fn navigate_strings(strings: &[String]) -> Option<Vec<String>> {
+pub fn navigate_strings(strings: &[String]) -> Option<Vec<String>> { //TODO: Fix the disappearing cursor bug
     let mut stdout = io::stdout();
     let mut current_index: usize = 0;
     let mut selected_indexes:Vec<usize> = Vec::new();
