@@ -47,12 +47,17 @@ fn selected_commit() {
     let mut combined = Vec::new();
     println!("{}", "Git Status:".green());
     combined.extend(untracked);
-    combined.extend(modified);
+    combined.extend(modified.iter().cloned());
     combined.push("Done".to_string());
     let selection = cursor::navigate_strings(&combined);
     match selection {
         Some(files) => {
-            push(Some(files.clone()),Some(files))
+            let diff_arguments: Vec<String> =  files.clone()
+                .iter()
+                .filter(|file| modified.contains(file))
+                .cloned()
+                .collect();
+            push(Some(diff_arguments),Some(files))
         }
         None => {
             println!("No files selected. Terminating...\n");
