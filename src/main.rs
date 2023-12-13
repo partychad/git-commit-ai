@@ -1,10 +1,10 @@
 mod commands;
-mod gpt_api;
 mod cursor;
+mod gpt_api;
 use clap::{App, SubCommand};
+use colored::Colorize;
 use commands::Commands;
 use gpt_api::CommitMessageGenerator;
-use colored::Colorize;
 use std::io::{self, Read};
 
 const API_URL: &str = "https://api.openai.com/v1/chat/completions";
@@ -45,50 +45,38 @@ fn selected_commit() {
     let status = git_status.call();
     let (_, untracked, modified) = parse_git_status(&status);
     let mut combined = Vec::new();
-    println!("{}","Git Status:".green());
+    println!("{}", "Git Status:".green());
     combined.extend(untracked);
     combined.extend(modified);
     combined.push("Done".to_string());
     let selection = cursor::navigate_strings(&combined);
     match selection {
         Some(files) => {
-            println!("{:?}",files);
+            println!("{:?}", files);
         }
         None => {}
     }
 }
 
 fn display_commit_message() -> String {
-    let generator = CommitMessageGenerator::new(
-    API_URL,
-    AI_MODEL,
-    PROMPT,
-    API_KEY
-    );
+    let generator = CommitMessageGenerator::new(API_URL, AI_MODEL, PROMPT, API_KEY);
     let git_diff = Commands::new("git".to_string(), vec!["diff".to_string()]);
     let git_status = Commands::new("git".to_string(), vec!["status".to_string()]);
     let commit_msg = generator.generate_commit_message(&git_diff.call(), &git_status.call());
     let final_msg = match commit_msg {
-        Ok(msg) => {
-            msg
-        }
+        Ok(msg) => msg,
         Err(err) => {
-            eprintln!("{} {}\n","Error encountered:".red(), err);
+            eprintln!("{} {}\n", "Error encountered:".red(), err);
             return String::new();
         }
     };
-    print_commit_metadata( parse_git_status(&git_status.call()), &final_msg);
+    print_commit_metadata(parse_git_status(&git_status.call()), &final_msg);
 
     final_msg
 }
 
 fn display_config() {
-    let generator = CommitMessageGenerator::new(
-        API_URL,
-        AI_MODEL,
-        PROMPT,
-        API_KEY
-    );
+    let generator = CommitMessageGenerator::new(API_URL, AI_MODEL, PROMPT, API_KEY);
     generator.display_parameters();
 }
 
@@ -102,7 +90,8 @@ fn commit() {
         press_enter_to_continue();
         let git_add = Commands::new("git".to_string(), vec!["add".to_string(), ".".to_string()]);
         git_add.call();
-        git_commit.call();
+        let output = git_commit.call();
+        println!("{}", output);
     } else {
         eprintln!("Error: Commit message is empty!");
     }
@@ -114,7 +103,7 @@ fn push() {
         "git".to_string(),
         vec!["push".to_string(), "--force-with-lease".to_string()],
     );
-    let output:String = git_push.call();
+    let output: String = git_push.call();
     println!("{}", output);
 }
 
@@ -140,7 +129,7 @@ fn parse_git_status(output: &str) -> (String, Vec<String>, Vec<String>) {
         } else if line.starts_with("Untracked files:") {
             skip_line = 1;
             section = "untracked";
-        } else if !section.is_empty(){
+        } else if !section.is_empty() {
             if line.is_empty() {
                 section = "";
             }
@@ -155,25 +144,24 @@ fn parse_git_status(output: &str) -> (String, Vec<String>, Vec<String>) {
     (branch_name, untracked_files, modified_files)
 }
 
-fn print_commit_metadata(data:(String, Vec<String>, Vec<String>), commit_msg: &str) {
+fn print_commit_metadata(data: (String, Vec<String>, Vec<String>), commit_msg: &str) {
     let (branch, untracked, modified) = data;
-    println!("{} {}","Branch:".green(), branch);
+    println!("{} {}", "Branch:".green(), branch);
     if !untracked.is_empty() {
-        println!("{}","Untracked Files:".green());
+        println!("{}", "Untracked Files:".green());
         for file in untracked {
             println!("\t{}", file);
         }
     }
     if !modified.is_empty() {
-        println!("{}","Modified Files:".green());
+        println!("{}", "Modified Files:".green());
         for file in modified {
             println!("\t{}", file);
         }
     }
     if !commit_msg.is_empty() {
-        println!("{} {}\n","Commit Message:".green(), commit_msg);
+        println!("{} {}\n", "Commit Message:".green(), commit_msg);
     }
-
 }
 
 fn press_enter_to_continue() {
