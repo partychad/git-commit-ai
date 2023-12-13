@@ -57,7 +57,7 @@ fn selected_commit() {
                 .filter(|file| modified.contains(file))
                 .cloned()
                 .collect();
-            push(Some(diff_arguments),Some(files))
+            push(Some(files),Some(diff_arguments))
         }
         None => {
             println!("No files selected. Terminating...\n");
@@ -98,12 +98,18 @@ fn display_config() {
 }
 
 fn commit(status:Option<Vec<String>>, diff:Option<Vec<String>>) {
-    let commit_msg = display_commit_message(status, diff);
+    let commit_msg = display_commit_message(status.clone(), diff);
     if !commit_msg.is_empty() {
         let git_commit = Commands::new(
             "git".to_string(),
             vec!["commit".to_string(), "-m".to_string(), commit_msg],
         );
+        let mut add_arguments = vec!["add".to_string()];
+        if let Some(status) = status {
+            add_arguments.extend(status);
+        } else {
+            add_arguments.push(".".to_string());
+        }
         press_enter_to_continue();
         let git_add = Commands::new("git".to_string(), vec!["add".to_string(), ".".to_string()]);
         git_add.call();
