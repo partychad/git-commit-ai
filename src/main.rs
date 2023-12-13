@@ -29,7 +29,7 @@ fn main() {
 
     // Check which subcommand (if any) was used
     match matches.subcommand_name() {
-        Some("s") => display_status(),
+        Some("s") => selected_commit(),
         Some("d") => {
             display_commit_message();
         }
@@ -40,7 +40,7 @@ fn main() {
         _ => unreachable!(), // If someone added a subcommand but didn't add a case here
     }
 }
-fn display_status() {
+fn selected_commit() {
     let git_status = Commands::new("git".to_string(), vec!["status".to_string()]);
     let status = git_status.call();
     let (_, untracked, modified) = parse_git_status(&status);
@@ -49,7 +49,13 @@ fn display_status() {
     combined.extend(untracked);
     combined.extend(modified);
     combined.push("Done".to_string());
-    cursor::navigate_strings(&combined);
+    let selection = cursor::navigate_strings(&combined);
+    match selection {
+        Some(files) => {
+            println!("{:?}",files);
+        }
+        None => {}
+    }
 }
 
 fn display_commit_message() -> String {
