@@ -115,6 +115,7 @@ fn push() {
         vec!["push".to_string(), "--force-with-lease".to_string()],
     );
     let output:String = git_push.call();
+    println!("Push {}", output);
 }
 
 fn parse_git_status(output: &str) -> (String, Vec<String>, Vec<String>) {

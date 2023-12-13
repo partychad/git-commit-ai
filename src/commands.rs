@@ -24,13 +24,9 @@ impl Commands {
 
         let output = cmd.output().expect("Failed to execute command");
         // Convert the output bytes to a String and print it
-        if output.status.success() {
-            let stdout: String = String::from_utf8(output.stdout).unwrap();
-            stdout
-        } else {
-            let stderr = String::from_utf8(output.stderr).unwrap();
-            stderr
-        }
+        let stdout: String = String::from_utf8(output.stdout).unwrap();
+        let stderr = String::from_utf8(output.stderr).unwrap();
+        format!("{}\n{}", stdout, stderr)
     }
 
     #[allow(dead_code)]
