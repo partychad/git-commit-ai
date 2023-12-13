@@ -31,11 +31,11 @@ fn main() {
     match matches.subcommand_name() {
         Some("s") => selected_commit(),
         Some("d") => {
-            display_commit_message();
+            display_commit_message(None,None);
         }
         Some("config") => display_config(),
-        Some("c") => commit(),
-        Some("p") => push(),
+        Some("c") => commit(None,None),
+        Some("p") => push(None,None),
         None => println!("No subcommand was used"),
         _ => unreachable!(), // If someone added a subcommand but didn't add a case here
     }
@@ -58,10 +58,20 @@ fn selected_commit() {
     }
 }
 
-fn display_commit_message() -> String {
+fn display_commit_message(status:Option<Vec<String>>, diff:Option<Vec<String>>) -> String {
     let generator = CommitMessageGenerator::new(API_URL, AI_MODEL, PROMPT, API_KEY);
-    let git_diff = Commands::new("git".to_string(), vec!["diff".to_string()]);
-    let git_status = Commands::new("git".to_string(), vec!["status".to_string()]);
+    let mut diff_arguments = vec!["diff".to_string()];
+    if let Some(diff) = diff {
+        diff_arguments.extend(diff);
+    }
+
+    let mut status_arguments = vec!["status".to_string()];
+    if let Some(status) = status {
+        status_arguments.extend(status);
+    }
+
+    let git_diff = Commands::new("git".to_string(), diff_arguments);
+    let git_status = Commands::new("git".to_string(), status_arguments);
     let commit_msg = generator.generate_commit_message(&git_diff.call(), &git_status.call());
     let final_msg = match commit_msg {
         Ok(msg) => msg,
@@ -80,8 +90,8 @@ fn display_config() {
     generator.display_parameters();
 }
 
-fn commit() {
-    let commit_msg = display_commit_message();
+fn commit(status:Option<Vec<String>>, diff:Option<Vec<String>>) {
+    let commit_msg = display_commit_message(status, diff);
     if !commit_msg.is_empty() {
         let git_commit = Commands::new(
             "git".to_string(),
@@ -97,8 +107,8 @@ fn commit() {
     }
 }
 
-fn push() {
-    commit();
+fn push(status:Option<Vec<String>>, diff:Option<Vec<String>>) {
+    commit(status, diff);
     let git_push = Commands::new(
         "git".to_string(),
         vec!["push".to_string(), "--force-with-lease".to_string()],
