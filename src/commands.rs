@@ -26,6 +26,7 @@ impl Commands {
         // Convert the output bytes to a String and print it
         String::from_utf8(output.stdout).expect("Not UTF8")
     }
+
     #[allow(dead_code)]
     pub fn print(&self) {
         let result = self.call();
