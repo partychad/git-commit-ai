@@ -52,7 +52,7 @@ fn selected_commit() {
     let selection = cursor::navigate_strings(&combined);
     match selection {
         Some(files) => {
-            let diff_arguments: Vec<String> =  files.clone()
+            let diff_arguments: Vec<String> =  files // Truncating the newly added files
                 .iter()
                 .filter(|file| modified.contains(file))
                 .cloned()
