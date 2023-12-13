@@ -111,7 +111,7 @@ fn commit(status:Option<Vec<String>>, diff:Option<Vec<String>>) {
             add_arguments.push(".".to_string());
         }
         press_enter_to_continue();
-        let git_add = Commands::new("git".to_string(), vec!["add".to_string(), ".".to_string()]);
+        let git_add = Commands::new("git".to_string(), add_arguments);
         git_add.call();
         let output = git_commit.call();
         println!("{}", output);
