@@ -17,7 +17,7 @@ fn main() {
         .version("1.0")
         .author("<partychad@protonmail.com>")
         .about("Automates git commit messages using GPT suggestions.")
-        .subcommand(SubCommand::with_name("s").about("Displays git status"))
+        .subcommand(SubCommand::with_name("s").about("Interactive promt to commit & push of selected files"))
         .subcommand(
             SubCommand::with_name("d")
                 .about("Display the generated commit message without committing"),

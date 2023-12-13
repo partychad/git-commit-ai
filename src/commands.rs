@@ -42,6 +42,7 @@ impl Commands {
         );
     }
 }
+    // Check which subcommand (if any) was used
 
 impl fmt::Debug for Commands {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
