@@ -53,6 +53,7 @@ fn selected_commit() {
     match selection {
         Some(files) => {
             println!("{:?}", files);
+            push(Some(files.clone()),Some(files))
         }
         None => {}
     }
