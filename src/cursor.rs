@@ -1,5 +1,5 @@
 use crossterm::{
-    cursor::{Hide, MoveTo},
+    cursor::{Hide, MoveTo, Show},
     event::{self, Event, KeyCode},
     terminal::{self, Clear, ClearType},
     ExecutableCommand,
@@ -90,6 +90,7 @@ pub fn navigate_strings(strings: &[String]) -> Option<Vec<String>> { //TODO: Fix
 
     stdout.execute(MoveTo(0, 0)).unwrap();
     stdout.execute(Clear(ClearType::All)).unwrap();
+    stdout.execute(Show).unwrap();
     terminal::disable_raw_mode().unwrap();
 
     if selected_indexes.is_empty() || escape_pressed {
