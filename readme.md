@@ -36,7 +36,7 @@ cd git-commit-ai
 Before running the application, you need to set up your OpenAI API key. You can do this using environment variables:
 
 ```bash
-export GPT_API_KEY=your_api_key_here
+export GPT_API_KEY={API_KEY}
 ```
 
 3. **Run the application:**
